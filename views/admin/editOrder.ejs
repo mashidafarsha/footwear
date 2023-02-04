@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+.form-range{
+  /* -webkit-appearance: none; */
+  width: 100%;
+  height: 25px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.form-range:hover {
+  opacity: 1;
+}
+
+.form-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #00ffa2;
+   cursor: pointer;
+} 
+
+.form-range::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #00ffa2;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+    
+
+
+
+      <section class="head bg-dark" style="padding-top: 30px;">
+        <div class="container p-5">
+            <div class="head-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h2 style="color: white;">View Order</h2>
+                    <nav class="d-flex align-items-center">
+                        <a href="/orders">Orders &#8594</span></a>
+                        <a href="">View Order</a>
+                    </nav>
+                </div>
+            </div>
+    </section>
+    
+    
+    <!-- <div class="card border-0 ad-box-shadow p-0">
+        <div class="card-header">
+            Status
+        </div>
+        <div class="card-body">
+            <form action="/adminapi/order/updateSTS" method="post" onsubmit="submitData('stsRangeUpdate');return false" id="stsRangeUpdateForm">
+
+                <label for="customRange3" class="form-label">Order Status</label>
+                <input type="hidden" name="id" value="63d4c011580a7b4183e29371">
+                <input type="range" class="form-range" min="1" max="4" step="1" id="customRange3" value="2" name="sts" onchange="$('#stsRangeUpdateBtn').show()">
+                <div class="d-flex justify-content-between">
+                    <p>Ordered</p>
+                    <p>Shipped</p>
+                    <p>Out For Delivery</p>
+                    <p>Delivered</p>
+                </div>
+                <button class="btn btn-sm btn-primary w-100" id="stsRangeUpdateBtn"  type="submit">UPDATE</button>
+                <div id="stsRangeUpdateResponse"></div>
+            </form>
+            <table class="table table-striped">
+                 
+                    <tbody><tr title="Tue Jan 31 2023 11:02:53 GMT+0000 (Coordinated Universal Time)">
+                        <td>
+                            <b>SHIPPED</b>
+                      </td>
+                      <td>
+                          31/1/2023
+                      </td>
+                  </tr>
+                     
+                   
+                    <tr title="Sat Jan 28 2023 06:26:31 GMT+0000 (Coordinated Universal Time)">
+                        <td>
+                            <b>ORDERED</b>
+                      </td>
+                      <td>
+                          28/1/2023
+                      </td>
+                  </tr>
+                      
+
+                   
+               
+            </tbody></table>
+        </div>
+    </div> -->
+
+    <div>
+        <div class="p-3  my-3 " style="border: 1px solid rgba(29, 11, 11, 0.145); background-color: #d1e7dd;">
+          
+          <form action="/admin/delivery-status/<%= order._id %>" method="post">
+          <h5>Delivery status</h5>
+          <span><input type="radio"   name="deliveryStatus" value="ordered" required 
+            <% if(order.deliverystatus.ordered.state==true){ %> checked <% } %>>
+            <label for=" ">Ordered</label></span><br>
+          <span><input type="radio"   name="deliveryStatus" value="shipped" required
+            <% if(order.deliverystatus.shipped.state==true){ %> checked <% } %>>
+              <label for=" ">Shipped</label></span><br>
+          <span><input type="radio"   name="deliveryStatus" value="outForDelivery" required
+            <% if(order.deliverystatus.out_for_delivery.state==true){ %> checked <% } %>>
+              <label for=" ">Out For Delivery</label></span><br>
+              <span><input type="radio"   name="deliveryStatus" value="delivered" required
+                <% if(order.deliverystatus.delivered.state==true){ %> checked <% } %>>
+                <label for=" ">Delivered</label></span><br>
+      
+      
+                <% if(order.deliverystatus.delivered.state == false && order.deliverystatus.canceled.state == false){ %>
+                    <button class="btn btn-success btn-sm my-2" type="submit" id="delStat">Update</button>
+                  <% } else if(order.deliverystatus.canceled.state == true) { %>
+                  <h5 class="mt-2 py-2 text-danger text-center" style="border: 1px solid rgba(0, 0, 0, 0.17); background-color: #c7dbd2;">Order Cancelled </h5>
+                  <% } else if(order.deliverystatus.delivered.state == true) { %>
+                    <h5 class="mt-2 py-2 text-success text-center" style="border: 1px solid rgba(0, 0, 0, 0.17); background-color: #c7dbd2;">Order Delivered </h5>
+                  <% } %>
+
+      
+      
+              </form>
+              
+      </div>
+      </div>
+    
+    
+    <div class="border p-2 mt-2" id="">
+        <div id="">
+    
+            <h5 class="text-secondary border-bottom py-2 mb-2">View Order</h5>
+    
+    
+    
+            <div class="card p-3 bg-light my-2" style="border-radius: 0;" id=" item">
+                <h6 class="text-secondary border-bottom py-2 mb-2">Delivery Address</h6>
+    
+                <p>
+                    <%= order.address%>
+                </p>
+    
+            </div>
+            <div class="card p-3 bg-light my-2" style="border-radius: 0;" id=" item">
+                <h6 class="text-secondary border-bottom py-2 mb-2">Products</h6>
+                <div class="table-responsive">
+                    <table class="table table-secondary table-striped my-2">
+    
+                        <!-- <thead>
+                                  <tr>
+                                    
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Total</th>
+                                  </tr>
+                                </thead> -->
+                        <tbody>
+                            <% order.products.forEach((prod)=> { %>
+                                <tr>
+                                  
+    
+                                    <td class="text-center">
+                                        <%= prod.item.productName %>
+                                    </td>
+                                    <td class="text-center"><%= prod.item.Price %></td>
+                                    <td class="text-center">
+                                        <%= prod.quantity %>
+                                    </td>
+                                    <td class="text-center"> <b> <%= order.total %></b>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+    
+                    </table>
+                </div>
+            </div>
+    
+            <div class="card p-3 bg-light my-2" style="border-radius: 0;" id=" item">
+                <h6 class="text-secondary border-bottom py-2 mb-2">Bill Details</h6>
+                <div class="table-responsive">
+                    <table class="table table-secondary table-striped my-2">
+                       
+                            <tbody>
+                                
+                                <tr>
+                                    <td>Order ID</td>
+                                    <td>
+                                        <%= order._id %>
+                                    </td>
+                                    <td>Items</td>
+                                    <td>
+                                        <%= order.products.length %>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Payment Method</td>
+                                    <td>
+                                        <%= order.payment%>
+                                    </td>
+                                    <td>Delivery Status</td>
+                            <% if(order.deliverystatus.returned.state){ %>
+                                <td>Returned
+                                </td>
+                                <% }else if(order.deliverystatus.delivered.state){ %>
+                                    <td>Delivered
+                                    </td>
+                                    <% } else if(order.deliverystatus.out_for_delivery.state){ %>
+                                        <td>Out for delivery
+                                        </td>
+                                        <% } else if(order.deliverystatus.shipped.state){ %>
+                                            <td>Shipped
+                                            </td>
+                                            <% } else if(order.deliverystatus.canceled.state){ %>
+                                                <td>Canceled
+                                                </td>
+                                                <% } else if(order.deliverystatus.ordered.state){ %>
+                                                    <td>Ordered
+                                                    </td>
+                                                   
+                                                        <% } %>
+                                </tr>
+                                <tr>
+                                    <td>Payment Status</td>
+                                    <td>
+                                        <%= order.status%>
+                                    </td>
+                                    <td>Sub Total</td>
+                                    <td><%= order.total %>
+                                    </td>
+                                </tr>
+    
+    
+    
+     
+                            </tbody>
+                           
+                    </table>
+                </div>
+    
+    
+    
+            </div>
+    
+    
+        </div>
+    
+    
+    
+    </div>
+    
+    
+    
+    </div>
+    
+    
+    
+    </div>
+    </div>
+    
+    </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="col-12 tm-block-col">
+        <div
+          class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll"
+        >
+          <h2 class="tm-block-title">Orders List</h2>
+          <table class="table">
+            <thead>
+                
+              <tr>
+                <th scope="col">ORDER ID</th>
+                <th scope="col">USER NAME</th>
+                <th scope="col">ITEMS</th>
+                <th scope="col">ORDER STATUS</th>
+                <th scope="col">PAYMENT STATUS</th>
+                <th scope="col">DELIVERY STATUS</th>
+                <th scope="col">DATE</th>
+                <th scope="col">&nbsp;</th>
+              </tr>
+            </thead>
+            <tbody>
+                <% order.forEach(function (order) { %>
+              <tr>
+                <th scope="row"><b><%=order._id%></b></th>
+                <td>
+                 </div>
+                  <%=order.userId%>
+                </td>
+                <td><b> <%=order.products.length%></b></td>
+                <td> <div class="tm-status-circle moving"></div><b> <%=order.status%></b></td>
+                
+              
+                <td><b> <%=order.payment%></b></td>
+               
+                            <% if(order.deliverystatus.returned.state){ %>
+                                <td>Returned
+                                </td>
+                                <% }else if(order.deliverystatus.delivered.state){ %>
+                                    <td>Delivered
+                                    </td>
+                                    <% } else if(order.deliverystatus.out_for_delivery.state){ %>
+                                        <td>Out for delivery
+                                        </td>
+                                        <% } else if(order.deliverystatus.shipped.state){ %>
+                                            <td>Shipped
+                                            </td>
+                                            <% } else if(order.deliverystatus.canceled.state){ %>
+                                                <td>Canceled
+                                                </td>
+                                                <% } else if(order.deliverystatus.ordered.state){ %>
+                                                    <td>Ordered
+                                                    </td>
+                                                   
+                                                        <% } %>
+                <td>256</td>
+
+                <td>
+                  <a href="#" class="tm-product-delete-link">
+                    <i class="far fa-trash-alt tm-product-delete-icon"></i>
+                  </a>
+                  <a
+                    href="/admin/editOrder/<%=order._id%>"
+                    class="tm-product-delete-link"
+                  >
+                    <i class="fas fa-pencil-alt tm-product-delete-icon"></i>
+                  </a>
+                </td>
+                
+              </tr>
+                 <% }) %>
+             
+            </tbody>
+          </table>
+        </div>
+      </div>
+</body>
+</html>

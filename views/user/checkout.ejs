@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Basic -->
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Site Metas -->
+  <title>ThewayShop - Ecommerce Bootstrap 4 HTML Template</title>
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <!-- Site Icons -->
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+</head>
+
+<body>
+  <!-- Start Top Search -->
+  <div class="top-search">
+    <div class="container">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+        <input type="text" class="form-control" placeholder="Search" />
+        <span class="input-group-addon close-search"><i class="fa fa-times"></i></span>
+      </div>
+    </div>
+  </div>
+  <!-- End Top Search -->
+
+  <!-- Start All Title Box -->
+  <div class="all-title-box">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <h2>Checkout</h2>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Shop</a></li>
+            <li class="breadcrumb-item active">Checkout</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End All Title Box -->
+
+  <!-- Start Cart  -->
+  <div class="cart-box-main">
+    <div class="container">
+      <form action="" id="checkout-form">
+        <div class="row">
+          <div class="col-sm-6 col-lg-6 mb-3">
+            <div class="checkout-address">
+              <!-- <div class="title-left">
+                <h3>Billing address</h3>
+              </div>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="firstName">First name *</label>
+                    <input
+                    name=""
+                      type="text"
+                      class="form-control"
+                      id="firstName"
+                      placeholder=""
+                      value=""
+                     
+                    />
+                    <div class="invalid-feedback">
+                      Valid first name is required.
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="lastName">Last name *</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="lastName"
+                      placeholder=""
+                      value=""
+                     
+                    />
+                    <div class="invalid-feedback">
+                      Valid last name is required.
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="username">Username *</label>
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="username"
+                      placeholder=""
+                      
+                    />
+                    <div class="invalid-feedback" style="width: 100%">
+                      Your username is required.
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="email">Email Address *</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    placeholder=""
+                  />
+                  <div class="invalid-feedback">
+                    Please enter a valid email address for shipping updates.
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="address">Address *</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="address"
+                    placeholder=""
+                  
+                  />
+                  <div class="invalid-feedback">
+                    Please enter your shipping address.
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-5 mb-3">
+                    <label for="country">Country *</label>
+                    <input
+                    type="text"
+                    class="form-control"
+                    id="address"
+                    placeholder=""
+                  
+                  />
+                    <div class="invalid-feedback">
+                      Please select a valid country.
+                    </div>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <label for="state">State *</label>
+                    <input
+                    type="text"
+                    class="form-control"
+                    id="address"
+                    placeholder=""
+                    
+                  />
+                    <div class="invalid-feedback">
+                      Please provide a valid state.
+                    </div>
+                  </div>
+                  <div class="col-md-3 mb-3">
+                    <label for="zip">Zip *</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="zip"
+                      placeholder=""
+                      
+                    />
+                    <div class="invalid-feedback">Zip code required.</div>
+                  </div>
+                </div> -->
+              <hr class="mb-4" />
+              <section class="row justify-content-center" style="margin-top: 2em">
+                <div class="col-9 col-sm-8 col-md-8 col-lg-12">
+                  <% userData.AddressData.forEach(function(user) { %>
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                          <h5 class="card-title">Address 1</h5>
+
+                          <input class="checkout_input_checkbox" type="radio" id="html" name="address" required
+                            value="<%=user.firstname %><%=user.lastname%><%=user.address%><%=user.state%><%=user.district%><%=user.pin%><%=user.email%><%=user.phonenumber%>" />
+                        </div>
+                        <p class="card-text w-75">
+                          <%=user.firstname%>
+                            <%=user.lastname%>
+                              <%=user.address%>
+                                <%=user.state%>
+                                  <%=user.district%>
+                                    <%=user.pin%><br />
+                                      <%=user.email%><br />
+                                        <%=user.phonenumber%>
+                        </p>
+                        <div class="d-flex justify-content-between"></div>
+                      </div>
+                    </div>
+                    <% }) %>
+                </div>
+              </section>
+
+              <hr class="mb-1" />
+              <div class="col-12 d-flex shopping-box">
+                <a href="/your-account" class="ml-auto btn hvr-hover">Add New Address</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-6 mb-3">
+            <div class="row">
+              <div class="col-md-12 col-lg-12">
+                <div class="shipping-method-box">
+                  <div class="title-left">
+                    <h3>Shipping Method</h3>
+                  </div>
+                  <div class="mb-4">
+                    <div class="custom-control custom-radio">
+                      <input id="shippingOption1" name="Shipping-Method" class="custom-control-input" checked="checked"
+                        type="radio" value="COD" />
+                      <label class="custom-control-label" for="shippingOption1">COD</label>
+                      <!-- <span class="float-right font-weight-bold">FREE</span> -->
+                    </div>
+                    <div class="ml-4 mb-2 small">(3-9 business days)</div>
+                    <div class="custom-control custom-radio">
+                      <input id="shippingOption2" name="Shipping-Method" class="custom-control-input" type="radio"
+                        value="online" />
+                      <label class="custom-control-label" for="shippingOption2">Online Delivery</label>
+                      <!-- <span class="float-right font-weight-bold">10.00</span> -->
+                    </div>
+                    <div class="ml-4 mb-2 small">(2-4 business days)</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-12">
+                <div class="odr-box">
+                  <div class="title-left">
+                    <h3>Shopping cart</h3>
+                  </div>
+                  <div class="rounded p-2 bg-light">
+                    <% cartData.products.forEach(function(cart) { %>
+                      <div class="media mb-2 border-bottom">
+                        <div class="media-body">
+                          <input name="proId" value="<%=cart.item%>" type="text" hidden />
+
+                          <a href="detail.html">
+                            <%=cart.item.productName %>
+                          </a>
+                          <div class="small text-muted">
+                            Price: <%=cart.item.Price %>
+                              <span class="mx-2">|</span>Qty: <%=cart.quantity%>
+                                <span class="mx-2">|</span>Subtotal:<%=cart.price%>
+                          </div>
+                        </div>
+                      </div>
+                      <% }) %>
+                  </div>
+                </div>
+              </div>
+              <input name="userId" value="<%=cartData.user%>" type="text" hidden />
+              <div class="col-lg-6 col-sm-6">
+                <div class="coupon-box">
+                  <div class="input-group input-group-sm">
+                    <input id="coupon-code" name="coupen" placeholder="Enter your coupon code" aria-label="Coupon code"
+                      type="text" />
+
+                    <div class="input-group-append">
+                      <button onclick="applyCoupen()" class="btn btn-theme" type="button">
+                        Apply Coupon
+                      </button>
+                      <hr class="mb-3" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr class="mb-5" />
+              <div class="col-md-12 col-lg-12">
+                <div class="order-box">
+                  <div class="title-left">
+                    <h3>Your order</h3>
+                  </div>
+                  <div class="d-flex">
+                    <div class="font-weight-bold">Product</div>
+                    <div class="ml-auto font-weight-bold">Total</div>
+                  </div>
+
+                  <hr class="my-1" />
+                  <div class="d-flex">
+                    <h4>Sub Total</h4>
+                    <div class="ml-auto font-weight-bold">
+                      <%=cartData.totalprice %>
+                    </div>
+                  </div>
+
+                  <hr class="my-1" />
+                  <div class="d-flex">
+                    <h4>Coupon Discount</h4>
+                    <div id="discount" class="ml-auto font-weight-bold">10</div>
+                  </div>
+
+                  <hr />
+                  <div class="d-flex gr-total">
+                    <h5>Grand Total</h5>
+                    <div id="total" class="ml-auto h5">388</div>
+                  </div>
+                  <hr />
+                </div>
+              </div>
+              <div class="col-12 d-flex shopping-box">
+                <!-- <a href="checkout.html" class="ml-auto btn hvr-hover"
+                  >Place Order</a
+                > -->
+                <button class="ml-auto btn hvr-hover" type="submit">
+                  Place Order
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- End Cart -->
+
+  <!-- Start copyright  -->
+  <div class="footer-copyright">
+    <p class="footer-company">
+      All Rights Reserved. &copy; 2018 <a href="#">ThewayShop</a> Design By :
+      <a href="https://html.design/">html design</a>
+    </p>
+  </div>
+  <!-- End copyright  -->
+
+  <a href="#" id="back-to-top" title="Back to top" style="display: none">&uarr;</a>
+</body>
+
+</html>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- AJAX -->
+<script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+  crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+<script>
+  function Alertcheck(url) {
+    Swal.fire({
+      title: "Do you want to Delete?",
+      showDenyButton: true,
+
+      confirmButtonText: "Delete",
+      denyButtonText: `Cancel`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        window.location.href = url;
+      }
+    });
+  }
+</script>
+
+<script>
+  function applyCoupen() {
+    let couponCode = $("#coupon-code").val();
+    console.log(couponCode);
+    $.ajax({
+      url: "/apply-coupen",
+      method: "post",
+      data: {
+        code: couponCode,
+      },
+      success: (response) => {
+        console.log(response);
+        if (response.success) {
+          // Apply the discount to the total
+          var newTotal = response.newTotal;
+          var discount = response.discount
+          $("#total").text(newTotal);
+          // alert("Coupon applied! New total: " + newTotal);
+          $("#discount").text(discount);
+          console.log("hhhhhhhhhhhh");
+          Swal.fire("Success", "Coupon applied!", "success");
+        } else if (response.notapplicable) {
+          // alert("Can't apply the coupon");
+          Swal.fire("error", "Can't apply the coupon", "error");
+        } else if(response.expired)  {
+          Swal.fire("error", "Invalid coupon code.", "error");
+          // alert("Invalid coupon code.");
+        }else {
+          // alert("Invalid coupon code or you have already applied this coupon");
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Invalid coupon code or you have already applied this coupon!',
+
+          })
+        }
+      },
+    });
+  }
+</script>
+
+<script>
+  $("#checkout-form").submit((e) => {
+    e.preventDefault();
+
+    $.ajax({
+      url: "/checkout",
+      method: "post",
+      data: $("#checkout-form").serialize(),
+      success: (response) => {
+        alert(response);
+        if (response.codStatus) {
+          location.href = "/order-success";
+        } else {
+          console.log("hiiiiiiiiiiiiiiiiiiiiiiiiiiii", response);
+          razorpayPayment(response);
+        }
+      },
+    });
+  });
+
+  function razorpayPayment(Data) {
+    console.log(Data.Data.amount, "ssssssssssssssssssss");
+    var options = {
+      key: "rzp_test_LSJeDQEzbT9qcg", // Enter the Key ID generated from the Dashboard
+      amount: Data.Data.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      currency: "INR",
+      name: "BLISS",
+      description: "Test Transaction",
+      image: "https://example.com/your_logo",
+      order_id: Data.Data.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      handler: function (response) {
+        // console.log(response);
+        // alert(response.razorpay_payment_id);
+        // alert(response.razorpay_order_id);
+        // alert(response.razorpay_signature)
+        console.log(Data.Data, "ggggggggggggggggggggggggggggggggggggg");
+        verifyPayment(response, Data.Data);
+      },
+      prefill: {
+        name: "Gaurav Kumar",
+        email: "gaurav.kumar@example.com",
+        contact: "9000090000",
+      },
+      notes: {
+        address: "Razorpay Corporate Office",
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+    var rzp1 = new Razorpay(options);
+
+    rzp1.open();
+  }
+
+  function verifyPayment(payment, Data) {
+    console.log("chck''''''''''", Data);
+
+    $.ajax({
+      url: "/verify-payment",
+      data: {
+        payment: payment,
+        Data: Data,
+      },
+      method: "post",
+      success: (response) => {
+        if (response.status) {
+          location.href = "/order-success";
+        } else {
+          alert("payment failed");
+        }
+      },
+    });
+  }
+</script>

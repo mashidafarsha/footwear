@@ -1,0 +1,50 @@
+<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
+    <div class="tm-bg-primary-dark tm-block tm-block-product-categories">
+        <h2 class="tm-block-title">Categories</h2>
+        <div class="tm-product-table-container">
+            <a
+            href="/admin/addCategory"
+            class="btn btn-primary float-right btn-block text-uppercase mb-3"
+            >Add New Category</a>
+            <table class="table tm-table-small tm-product-table">
+                <thead>
+                 
+                    <tr>
+                      <th scope="col">Sl No</th>
+                      <th scope="col">CATEGORY NAME</th>
+                      
+                      <th scope="col">DESCRIPTION</th>
+                    
+                     
+                      <th scope="col">&nbsp;</th>
+                    </tr>
+                  </thead>
+                <tbody>
+                    <%categoryData.forEach(function (categoryData,index) { %>
+                        <tr>
+                            <td scope="row"><%= index+1 %></td>
+                            <td class="tm-product-name"><%=categoryData.categoryName%></td>
+                            <td class="tm-product-name"><%=categoryData.Description%></td>
+                            <td class="text-center">
+                                <a href="/admin/deletecategory/<%=categoryData._id%>" onclick="return confirm('Are you sure you want to delete this <%= categoryData.categoryName%>?')"  class="tm-product-delete-link">
+                                    <i class="far fa-trash-alt tm-product-delete-icon"></i>
+                                </a>
+                                <a href="/admin/editCategory/<%=categoryData._id%>" class="tm-product-delete-link">
+                                    <i class="fas fa-pencil-alt tm-product-delete-icon"></i>
+                                   
+                                  </a>
+                            </td>
+                            
+                        </tr>
+                    <% }) %>
+                  
+                    
+                </tbody>
+            </table>
+        </div>
+        <!-- table container -->
+      
+            
+    </div>
+
+</div>

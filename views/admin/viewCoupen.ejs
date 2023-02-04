@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Product Page - Admin HTML Template</title>
+  </head>
+
+  <body id="reportsPage">
+    <div class="container mt-5">
+      <div class="row tm-content-row">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
+          <div class="tm-bg-primary-dark tm-block tm-block-products">
+            <div class="tm-product-table-container">
+              <a
+                href="/admin/addCoupen"
+                class="btn btn-primary float-right btn-block text-uppercase mb-3"
+                >Add new Coupen</a
+              >
+              <table class="table table-hover tm-table-small tm-product-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Sl No</th>
+                    <th scope="col">COUPEN NAME</th>
+                    <th scope="col">COUPEN ID</th>
+                    <th scope="col">MIN BILL</th>
+                    <th scope="col">CAP AMOUNT</th>
+                    <th scope="col">OFFER(%)</th>
+
+                    <th scope="col">EXP DATE</th>
+                    <th scope="col">STATUS</th>
+                    <th scope="col">&nbsp;</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <%coupendata.forEach(function (coupen,index) { %>
+                  <tr>
+                    <td><%= index+1 %></td>
+                    <td class="tm-product-name"><%=coupen.coupenname%></td>
+                    <td class="tm-product-name"><%=coupen.coupenid%></td>
+
+                    <td class="tm-product-name"><%=coupen.minbill%></td>
+                    <td class="tm-product-name"><%=coupen.capamount%></td>
+
+                    <td class="tm-product-name"><%=coupen.offer%></td>
+
+                    <td class="tm-product-name">
+                      <%=coupen.expdate.getDate()+ "-"
+                      +coupen.expdate.getMonth()+ "-"
+                      +coupen.expdate.getFullYear() %>
+                    </td>
+                    <td class="tm-product-name"><%=coupen.status%></td>
+                    <td>
+                      <a href="#" class="tm-product-delete-link">
+                        <i class="far fa-trash-alt tm-product-delete-icon"></i>
+                      </a>
+                      <a
+                        href="/admin/editCoupen"
+                        class="tm-product-delete-link"
+                      >
+                        <i class="fas fa-pencil-alt tm-product-delete-icon"></i>
+                      </a>
+                    </td>
+                  </tr>
+
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+            <!-- table container -->
+
+            <!-- <button class="btn btn-primary btn-block text-uppercase">
+              Delete selected products
+            </button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="tm-footer row tm-mt-small">
+      <div class="col-12 font-weight-light">
+        <p class="text-center text-white mb-0 px-4 small">
+          Copyright &copy; <b>2018</b> All rights reserved. Design:
+          <a
+            rel="nofollow noopener"
+            href="https://templatemo.com"
+            class="tm-footer-link"
+            >Template Mo</a
+          >
+        </p>
+      </div>
+    </footer>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      $(function () {
+        $(".tm-product-name").on("click", function () {
+          window.location.href = "edit-product.html";
+        });
+      });
+    </script>
+    <script>
+      function deleteButton(url) {
+        Swal.fire({
+          title: "Do you want to Delete?",
+          showDenyButton: true,
+
+          confirmButtonText: "Delete",
+          denyButtonText: `Cancel`,
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            window.location.href = url;
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

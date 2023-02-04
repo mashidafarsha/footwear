@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Edit Product - Dashboard Admin Template</title>
+
+</head>
+
+<body>
+
+    <div class="container tm-mt-big tm-mb-big">
+        <div class="row">
+            <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
+                <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+                    <div class="row">
+                        <div class="col-12">
+                            <h2 class="tm-block-title d-inline-block">Edit Product</h2>
+                        </div>
+                    </div>
+                    <div class="row tm-edit-product-row">
+                        <div class="col-xl-6 col-lg-6 col-md-12">
+                            <form action="/admin/editproduct/<%=product._id%>" method="post" class="tm-edit-product-form" enctype="multipart/form-data                                                          ">
+                                <div class="form-group mb-3">
+                                    <label for="name">Product Name
+                                    </label>
+                                    <input id="name" name="productname" type="text" value="<%=product.productName%>"
+                                        class="form-control validate" />
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="description">Description</label>
+                                    <textarea name="description" class="form-control validate tm-small" rows="5"
+                                        required><%=product.Description%></textarea>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="category">Category</label>
+                                   
+                                    <select name="category" class="custom-select tm-select-accounts" id="category">
+                                       
+                                        <%category.forEach(function (category) { %>
+                                        <option value="" <% if(product.Category==category.categoryName) {%> selected <% } %>><%=category.categoryName%></option>
+                                        <% }) %>
+                                    </select>
+                                   
+                                </div>
+                                <div class="form-group mb-3 col-xs-12 col-sm-6">
+                                    <label for="price">Price
+                                    </label>
+                                    <input id="price" name="price" type="text" class="form-control validate" value="<%=product.Price%>" required />
+                                </div>
+                                <div class="row">
+                                    <div class="form-group mb-3 col-xs-12 col-sm-6">
+                                        <label for="expire_date">Date
+                                        </label>
+                                        <input id="expire_date" name="date" type="text" value="<%=product.Date%>"
+                                            class="form-control validate" data-large-mode="true" />
+                                    </div>
+                                    <div class="form-group mb-3 col-xs-12 col-sm-6">
+                                        <label for="stock">Units In Stock
+                                        </label>
+                                        <input id="stock" name="stock" type="text" value="<%=product.Stock%>"
+                                            class="form-control validate" />
+                                    </div>
+                                </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="input-5">Image</label>
+                            <input type="file" multiple class="form-control" id="input-5" name="image" 
+                              placeholder="Choose an image" />
+                              <% for (let i=0; i< product.Image.length;i++){ %>
+                                <img src="/image/product-images/<%= product.Image[i] %>" width="100" class="img-thumbnail mt-1">
+                                <% } %>
+                                <div class="previewImages"></div>
+                          </div>
+                      
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block text-uppercase">Update Now</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="tm-footer row tm-mt-small">
+        <div class="col-12 font-weight-light">
+            <p class="text-center text-white mb-0 px-4 small">
+                Copyright &copy; <b>2018</b> All rights reserved.
+
+                Design: <a rel="nofollow noopener" href="https://templatemo.com" class="tm-footer-link">Template Mo</a>
+            </p>
+        </div>
+    </footer>
+
+
+    <script src="jquery-ui-datepicker/jquery-ui.min.js"></script>
+    <!-- https://jqueryui.com/download/ -->
+
+    <script>
+        $(function () {
+            $("#expire_date").datepicker({
+                defaultDate: "10/22/2020"
+            });
+        });
+    </script>
+
+</body>
+<script>
+    $(document).ready(function(){
+    let imgPreview = function(input,imagePlace){
+      if(input.files){
+        let allFiles = input.files.length
+        for(i=0;i<allFiles;i++){
+          let reader = new FileReader()
+          reader.onload = function(event){
+            $($.parseHTML("<img>")).attr("src",event.target.result).appendTo(imagePlace)
+          }
+          reader.readAsDataURL(input.files[i])
+        }
+      }
+    }
+    $("#file-input").on("change",function(){
+        imgPreview(this,"div.previewImages")
+      })
+  })
+</script>
+
+</html>

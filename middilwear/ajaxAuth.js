@@ -1,0 +1,9 @@
+module.exports={
+    verifyAjaxUser:(req,res,next)=>{
+        if(req.session.user){
+            next()
+        }else{
+            res.json({access:false})
+        }
+    }
+}
