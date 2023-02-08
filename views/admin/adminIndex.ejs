@@ -42,7 +42,7 @@
           <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
             <div class="tm-bg-primary-dark tm-block tm-block-taller">
               <h2 class="tm-block-title">Storage Information</h2>
-              <div id="pieChartContainer">
+              <div id="pieChartContainer" style="width: 300px;">
                 <canvas
                   id="pieCharts"
                  
@@ -263,12 +263,12 @@
 
   const data = {
   labels: [
-    'Red',
-    'Blue',
-    'Yellow'
+    'ordered',
+    'delivered',
+    'placed'
   ],
   datasets: [{
-    label: 'My First Dataset',
+    label: 'items',
     data: [`<%=ordered%>`,`<%=delivered%>`,`<%=placed%>`],
     backgroundColor: [
       'rgb(255, 99, 132)',

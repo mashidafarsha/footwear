@@ -45,21 +45,22 @@ const uploadOptions = multer({ storage:storage})
   router.get('/categoryManagement',verifyLoginAdmin,controller.viewCategory)
   router.get('/blockUser/:id',controller.blockUser)
   router.get('/activeUser/:id',controller.activeUser)
-  router.get('/addProduct',controller.addProduct)
-  router.get('/editProduct/:id',controller.editProduct)
-  router.get('/addCategory',controller.addCategory)
-  router.get('/editCategory/:id',controller.editCategory)
+  router.get('/addProduct',verifyLoginAdmin,controller.addProduct)
+  router.get('/editProduct/:id',verifyLoginAdmin,controller.editProduct)
+  router.get('/addCategory',verifyLoginAdmin,controller.addCategory)
+  router.get('/editCategory/:id',verifyLoginAdmin,controller.editCategory)
   router.get('/deleteproduct/:id',controller.deleteProduct)
   router.get('/deletecategory/:id',controller.deleteCategory)
   router.get('/viewCoupen',verifyLoginAdmin,controller.viewCoupen)
-  router.get('/addCoupen',controller.addCoupen)
-  router.get('/editCoupen',controller.editCoupen)
+  router.get('/addCoupen',verifyLoginAdmin,controller.addCoupen)
+  router.get('/editCoupen',verifyLoginAdmin,controller.editCoupen)
   router.get('/viewBanner',verifyLoginAdmin,controller.viewBanner)
-  router.get('/addBanner',controller.addBanner)
-  router.get('/viewOrder',controller.viewOrder)
-  router.get('/editOrder/:id',controller.editOrder)
-  router.get('/salesAsk',controller.salesAsk)
-  router.post('/salesReport',controller.salesReport)
+  router.get('/addBanner',verifyLoginAdmin,controller.addBanner)
+  router.get('/viewOrder',verifyLoginAdmin,controller.viewOrder)
+  router.get('/editOrder/:id',verifyLoginAdmin,controller.editOrder)
+  router.get('/salesAsk',verifyLoginAdmin,controller.salesAsk)
+  router.get('/invoice/:id',verifyLoginAdmin,controller.inVoice)
+ 
 
 
 
@@ -80,7 +81,7 @@ const uploadOptions = multer({ storage:storage})
   router.post('/addCoupen',controller.addCoupenPost)
   router.post('/addBanner',uploadOptions.array("image", 10),controller.addBannerPost)
   router.post('/delivery-status/:id',controller.deliveryStatus)
-
+  router.post('/salesReport',controller.salesReport)
 
  
 

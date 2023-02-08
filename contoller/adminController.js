@@ -422,6 +422,14 @@ module.exports = {
     }
 
   },
+  inVoice:async(req,res)=>{
+    let admin = req.session.admin;
+    let orderId = req.params.id
+   
+    let orderInfo = await Order.findOne({ _id:orderId}).populate(['products.item','userId'])
+    console.log(orderInfo,"kkkkkkkkkkkkkkk")
+    res.render('admin/invoice',{admin})
+  },
   salesAsk:(req,res)=>{
     let admin = req.session.admin;
     res.render('admin/salesAsk',{admin})
@@ -452,7 +460,8 @@ module.exports = {
         },
         { $sort: { ordered_date: -1 } },
       ]);
-      console.log(salesData, "innnn");
+      let salesDatas=salesData
+      console.log(salesDatas, "innnn");
       res.render('admin/salesReport', {admin, title: 'Sales Report', page: 'Sales Report', salesData })
     } catch (error) {
       console.log(error);
