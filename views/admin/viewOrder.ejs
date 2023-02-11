@@ -60,7 +60,9 @@
                                                     </td>
                                                    
                                                         <% } %>
-                <td>256</td>
+                <td> <%= order.order_date.getDate() %>/<%= order.order_date.getMonth()+1 %>/<%=order.order_date.getFullYear() %></td>
+               
+                                                          
 
                 <td>
                   <a href="/admin/invoice/<%=order._id%>" class="tm-product-delete-link">

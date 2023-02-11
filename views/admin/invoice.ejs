@@ -8,7 +8,7 @@
       <div class="container mb-5 mt-3"  name="printInvoice">
         <div class="row d-flex align-items-baseline">
           <div class="col-xl-12">
-            <p style="color: #7e8d9f;font-size: 20px;">Invoice >> <strong>ID:</strong></p>
+            <p style="color: #7e8d9f;font-size: 20px;">Invoice >> <strong>ID:<%= order._id%></strong></p>
           </div>
           
           <hr>
@@ -17,8 +17,8 @@
         <div class="container ">
           <div class="col-md-12 my-4">
             <div class="text-center">
-              <h1>BLISS</h1>
-              <p class="pt-0">bliss.club</p>
+              <h1>freshShop</h1>
+              <p class="pt-0">freshgallery.shop</p>
             </div>
   
           </div>
@@ -28,8 +28,8 @@
             <div class="col-xl-8">
               <ul class="list-unstyled">
                 <li class="text-muted">To: <span style="color:#5d9fc5 ;"></span></li>
-                <li class="text-muted"></li>
-                <li class="text-muted"></li>
+                <li class="text-muted"><%=order.userId.userName %></li>
+                <li class="text-muted"><%=order.address%></li>
                 <li class="text-muted"></li>
               </ul>
             </div>
@@ -37,13 +37,13 @@
               <p class="text-muted">Invoice</p>
               <ul class="list-unstyled">
                 <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
-                    class="fw-bold">ID:</span></li>
+                    class="fw-bold">ID:<%= order._id%></span></li>
                 <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
-                    class="fw-bold">Order Date: </span>
+                    class="fw-bold">Order Date: <%= order.order_date.getDate() %>/<%= order.order_date.getMonth()+1 %>/<%=order.order_date.getFullYear() %> </span>
                    </li>
-                <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
+                <!-- <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
                     class="me-1 fw-bold">Status:</span><span class="badge bg-warning text-black fw-bold">
-                      </span></li>
+                      </span></li> -->
               </ul>
             </div>
           </div>
@@ -60,15 +60,15 @@
                 </tr>
               </thead>
               <tbody>
-             
+                <% order.products.forEach((prod)=> { %>
                 <tr>
                   <th scope="row"></th>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                  <td> <%= prod.item.productName %></td>
+                  <td><%= prod.quantity %></td>
+                  <td><%= prod.item.Price %></td>
+                  <td><%= order.total %></td>
                 </tr>
-               
+                <% }) %>
               </tbody>
   
             </table>
@@ -81,10 +81,10 @@
             <div class="col-xl-3 ">
               <ul class="list-unstyled">
                 <li class="text-muted ms-3 "><span class="text-black me-4" style="float:left;">Sub Total</span><span style="float:right;"></span></li>
-                <li class="text-muted ms-3 mt-2" ><span class="text-black me-4" style="float:left;">Discount</span><span style="float:right;"></span></li>
+                <li class="text-muted ms-3 mt-2" ><span class="text-black me-4" style="float:left;">Discount : </span><span style="float:right;"><%= order.discount_amount%></span></li>
                 
               </ul>
-              <p class="text-dark ms-3 mt-2"><span class="text-black me-4" style="float:left;"><b>Grand Total</b> </span><span style="float:right;"><b></b></span></p>
+              <p class="text-dark ms-3 mt-2"><span class="text-black me-4" style="float:left;"><b>Grand Total</b> : </span><span style="float:right;"><b><%= order.grand_total %></b></span></p>
                
             </div>
           </div>

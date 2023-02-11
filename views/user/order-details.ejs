@@ -59,7 +59,7 @@
                                     <%= prod.quantity %>
                                 </td>
                                 <td class="text-center"> <b>
-                                        <%= order.total %>
+                                    <%= order.grand_total %>
                                     </b>
                                 </td>
                             </tr>
@@ -121,7 +121,7 @@
                             </td>
                             <td>Sub Total</td>
                             <td>
-                                <%= order.total %>
+                                <%= order.grand_total %>
                             </td>
                         </tr>
 
@@ -137,15 +137,13 @@
 
         </div>
         <% if(order.deliverystatus.delivered.state==true){ %>
-        <h1>no cancellation</h1>
-        <% }else{ %>
-            <a href="/cancel-order/<%= order._id %>"><button  class="btn btn-danger btn-lg m-5  " type="button" id="delStat">CANCELED</button></a>
-            <% }%>
+            <h1>no cancellation</h1>
+            <% }else{ %>
+                <a href="/cancel-order/<%= order._id %>"><button class="btn btn-danger btn-lg m-5  " type="button"
+                        id="delStat">CANCELED</button></a>
+                <% }%>
     </div>
 
 
 
 </div>
-
-
-

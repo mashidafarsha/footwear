@@ -1,37 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
+
 <body>
   <table class="table">
     <thead>
       <tr>
         <th scope="col">ID</th>
+        <th scope="col">PRODUCTS</th>
         <th scope="col">STATUS</th>
         <th scope="col">TOTAL</th>
         <th scope="col">METHOD</th>
+        <th scope="col">DATE</th>
         <th scope="col">&nbsp;</th>
       </tr>
     </thead>
     <tbody>
       <% order.forEach(function(order) { %>
-      <tr>
-        <td><%=order._id%></td>
-        <td><%=order.status%></td>
-        <td><%=order.total%></td>
-       
-        <td><%=order.payment%></td>
-        <td>  <a href="/order-details/<%=order._id%>"><button class="btn btn-success">VIEW</button></a></td>
-      
-      </tr>
-      <% }) %>
+        <tr>
+          <td>
+            <%=order._id%>
+          </td>
+          <td>
+            <% order.products.forEach((prod)=> { %>
+              <%= prod.item.productName %>,
+                <% }) %>
+          </td>
+          <td>
+            <%=order.status%>
+          </td>
+          <td>
+            <%=order.grand_total%>
+          </td>
+
+          <td>
+            <%=order.payment%>
+          </td>
+          <td>
+            <%= order.order_date.getDate() %> /<%= order.order_date.getMonth()+1 %>/ <%= order.order_date.getFullYear()
+                  %>
+          </td>
+          <td> <a href="/order-details/<%=order._id%>"><button class="btn btn-success">VIEW</button></a></td>
+
+        </tr>
+        <% }) %>
 
     </tbody>
   </table>
-</body>
-</html>
 
+</body>
+
+</html>

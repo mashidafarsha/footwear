@@ -17,7 +17,16 @@
   <!-- Site Icons -->
   <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-
+  <link rel="stylesheet" href="/details/details.css" />
+  <script src="/details/details-script.js"></script>
+  <style>
+    .squireImg {
+      object-fit: cover;
+      width: 220px;
+      height: 350px;
+      margin: auto;
+    }
+  </style>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <!-- Site CSS -->
@@ -43,6 +52,7 @@
 <body>
   <%- include('../partials/userpartials/userheader.ejs') %>
     <%- body %>
+  <%- include('../partials/userpartials/userfooter.ejs') %>
       <!-- ALL JS FILES -->
 
       <script src="/js/popper.min.js"></script>

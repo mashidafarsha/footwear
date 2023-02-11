@@ -24,7 +24,7 @@
                     <th scope="col">Sl No</th>
                     <th scope="col">BANNER NAME</th>
                     <th scope="col">DISCRIPTION</th>
-
+                    <th scope="col">IMAGE</th>
                     <th scope="col">&nbsp;</th>
                   </tr>
                 </thead>
@@ -35,10 +35,14 @@
                     <td class="tm-product-name"><%=banner.bannerName%></td>
                     <td class="tm-product-name"><%=banner.discription%></td>
 
+                    <td>
                    
+                      <img src="/image/product-images/<%=banner.image[0] %>"width="70" height="70" >
+                   
+                     </td>
 
                     <td>
-                      <a href="#" class="tm-product-delete-link">
+                      <a  onclick="deleteButton('/admin/deleteBanner/<%=banner._id%>')" class="tm-product-delete-link">
                         <i class="far fa-trash-alt tm-product-delete-icon"></i>
                       </a>
                       <a

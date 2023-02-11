@@ -13,9 +13,10 @@ const bannerSchema = new mongoose.Schema({
         type: [String],
         required: true
     },
-    status: {
-        type: String,
-        default: 'Active'
+    Status:{
+        type:Boolean,
+        require:true,
+        default:"true"
     }
 
 

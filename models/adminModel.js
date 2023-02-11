@@ -8,7 +8,7 @@ const adminSchema=new mongoose.Schema({
         type: String,
         required: true
     },
-    passWord : {
+    password : {
         type: String,
         require:true
     },
@@ -19,4 +19,4 @@ const adminSchema=new mongoose.Schema({
     },
    
 })
-module.exports=mongoose.model('Admin',adminSchema);
+module.exports=mongoose.model('admins',adminSchema);

@@ -20,6 +20,9 @@
                             <h2 class="tm-block-title d-inline-block">Add Coupen</h2>
                         </div>
                     </div>
+                    <% if(errors){ %>
+                        <p class="text-danger"><%=errors%> </p>
+                        <% } %>
                     <div class="row tm-edit-product-row">
                         <div class="col-xl-6 col-lg-6 col-md-12">
                             <form action="/admin/addCoupen" method="post" class="tm-edit-product-form">

@@ -4,27 +4,54 @@ const Products = require("../models/productModel");
 const Category = require("../models/categoryModel");
 const Coupen = require("../models/coupenModel");
 let Banner = require("../models/bannerModel");
-let Order=require("../models/orderModel")
-const createError=require('http-errors')
-
+let Order = require("../models/orderModel")
+const createError = require('http-errors')
+let { handleDuplicate } = require('../error/dbError')
+let { couponduplicate } = require('../error/dbError')
 var objectid = require("objectid");
-const { findByIdAndUpdate } = require("../models/userModel");
 
 module.exports = {
   // HOME------------------------------------------------
 
-  Home:async (req,res,next) => {
+  Home: async (req, res, next) => {
     try {
       let admin = req.session.admin;
-      let ordered=(await Order.find({'deliverystatus.ordered.state':true})).length
-      let delivered=(await Order.find({'deliverystatus.delivered.state':true})).length
-       let placed=(await Order.find({status:"placed"})).length
-     
-      // let ordered=await Order.find({'deliverystatus.ordered.state':true})
-      // let ordered=await Order.find({'deliverystatus.ordered.state':true})
-      // let ordered=await Order.find({'deliverystatus.ordered.state':true})
+      let ordered = (await Order.find({ 'deliverystatus.ordered.state': true })).length
+      let delivered = (await Order.find({ 'deliverystatus.delivered.state': true })).length
+      let placed = (await Order.find({ status: "placed" })).length
+
+      const startOfMonth = new Date();
+      startOfMonth.setDate(1);
+      startOfMonth.setHours(0, 0, 0, 0);
+
+      const endOfMonth = new Date();
+      endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+      endOfMonth.setDate(0);
+      endOfMonth.setHours(23, 59, 59, 999);
+
+      let salesChartDt = await Order.aggregate([
+        {
+          $match: {
+            order_date: {
+              $gte: startOfMonth,
+              $lt: endOfMonth,
+            },
+          },
+        },
+        {
+          $group: {
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$order_date" } },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $sort: { _id: 1 },
+        },
+      ]);
+
       console.log(delivered);
-      res.render("admin/adminIndex", { admin,ordered,delivered,placed });
+      console.log(salesChartDt);
+      res.render("admin/adminIndex", { admin, ordered, delivered, placed, salesChartDt });
     } catch (err) {
       next(err);
     }
@@ -33,7 +60,7 @@ module.exports = {
   // -----------------------------------------------------
 
   // LOGIN RENDER------------------------------------------
-  admin: (req, res) => {
+  admin: (req, res, next) => {
     try {
       if (req.session.loggedIn) {
         res.redirect("/admin");
@@ -49,21 +76,26 @@ module.exports = {
 
   // LOGIN POST---------------------------------------------
 
-  adminLogin: async (req, res) => {
+  adminLogin: async (req, res, next) => {
+    console.log('login')
     try {
       const { Email, password } = req.body;
       console.log(Email);
-      const admin = await Admin.findOne().where({ email: Email });
-      //console.log(admin);
+
+      const admin = await Admin.findOne({ email: Email });
+      console.log(admin);
       if (!admin) {
         res.redirect("/admin/adminLogin");
       } else {
         const isMatch = await Admin.findOne({ password });
-        // console.log(isMatch);
-        req.session.loggedIn = true;
-        req.session.admin = admin;
 
-        // console.log(req.session.admin);
+        if (isMatch) {
+          console.log('Successs');
+          req.session.loggedIn = true;
+          req.session.admin = admin;
+        }
+
+
         res.redirect("/admin");
       }
     } catch (err) {
@@ -73,7 +105,7 @@ module.exports = {
   // ------------------------------------------------------
   // ADMIN LOGOUT--------------------------------------------
 
-  adminLogout: (req, res) => {
+  adminLogout: (req, res, next) => {
     try {
       req.session.loggedOut = true;
       req.session.destroy();
@@ -84,7 +116,7 @@ module.exports = {
   },
   // ---------------------------------------------------------
   // VIEW PRODUCT------------------------------------------
-  viewProducts: async (req, res) => {
+  viewProducts: async (req, res, next) => {
     try {
       let admin = req.session.admin;
       let productData = await Products.find({ Status: "true" });
@@ -96,10 +128,10 @@ module.exports = {
   },
   // ------------------------------------------------------
   // ADD PRODUCTS RENDER----------------------------------
-  addProduct: async (req, res) => {
+  addProduct: async (req, res, next) => {
     try {
       let admin = req.session.admin;
-      let categoryData = await Category.find();
+      let categoryData = await Category.find({ Status: "true" });
       res.render("admin/addProduct", { categoryData, admin });
     } catch (err) {
       next(err);
@@ -107,7 +139,7 @@ module.exports = {
   },
   // -------------------------------------------------------
   // ADD PRODUCT POST---------------------------------------
-  addProductPost: (req, res) => {
+  addProductPost: (req, res, next) => {
     console.log(req.body);
 
     try {
@@ -133,7 +165,7 @@ module.exports = {
   },
   // -----------------------------------------------------------
   // EDIT PRODUCT RENDER----------------------------------------
-  editProduct: async (req, res) => {
+  editProduct: async (req, res, next) => {
     try {
       let admin = req.session.admin;
       let Id = req.params.id;
@@ -148,11 +180,13 @@ module.exports = {
   },
   // -------------------------------------------------------------
   // EDIT PRODUCT POST---------------------------------------------
-  editProductPost: async (req, res,next) => {
+  editProductPost: async (req, res, next) => {
     try {
       let Id = req.params.id;
-      console.log(req.files,"files");
+      console.log(req.body, "hhh");
+      console.log(req.files, "files");
       let image = req.files.map((file) => file.filename);
+
       //console.log(Id);
       await Products.findByIdAndUpdate(
         { _id: objectid(Id) },
@@ -164,7 +198,7 @@ module.exports = {
             Price: req.body.price,
             Date: req.body.date,
             Stock: req.body.stock,
-            Image:image
+            Image: image
           },
         }
       ).then(() => {
@@ -177,7 +211,7 @@ module.exports = {
   },
   // ---------------------------------------------------------------
   // DELETE PRODUCTS-----------------------------------------------
-  deleteProduct: async (req, res) => {
+  deleteProduct: async (req, res, next) => {
     try {
       let Id = req.params.id;
 
@@ -195,7 +229,7 @@ module.exports = {
   // ---------------------------------------------------------------
   // USER MANAGEMENT-------------------------------------------------
 
-  viewUser: async (req, res) => {
+  viewUser: async (req, res, next) => {
     try {
       let admin = req.session.admin;
       let userData = await User.find();
@@ -207,7 +241,7 @@ module.exports = {
   // ---------------------------------------------------------------
   // BLOCK USER-----------------------------------------------------
 
-  blockUser: async (req, res) => {
+  blockUser: async (req, res, next) => {
     try {
       let id = req.params.id;
       await User.findByIdAndUpdate(
@@ -222,7 +256,7 @@ module.exports = {
   },
   // -------------------------------------------------------------------
   // ACTIVE USER-------------------------------------------------------
-  activeUser: async (req, res) => {
+  activeUser: async (req, res, next) => {
     try {
       let id = req.params.id;
       await User.findByIdAndUpdate(
@@ -239,7 +273,7 @@ module.exports = {
 
   //CATEGORY MANAGEMENT------------------------------------------------------
 
-  viewCategory: async (req, res,next) => {
+  viewCategory: async (req, res, next) => {
     try {
       let admin = req.session.admin;
       let categoryData = await Category.find({ Status: "true" });
@@ -251,10 +285,10 @@ module.exports = {
   },
   // ------------------------------------------------------------------------
   // ADD CATEGORY RENDER---------------------------------------------------
-  addCategory: (req, res,next) => {
+  addCategory: (req, res, next) => {
     try {
       let admin = req.session.admin;
-      res.render("admin/addCategory", { admin });
+      res.render("admin/addCategory", { admin, errors: '' });
     } catch (err) {
       next(err);
     }
@@ -263,34 +297,44 @@ module.exports = {
   // ADD CATEGORY POST-------------------------------------------------------
   addCategoryPost: async (req, res, next) => {
     try {
+      let admin = req.session.admin;
       const categoryData = Category({
         categoryName: req.body.category,
         Description: req.body.description,
       });
       await categoryData.save().then(() => {
         res.redirect("/admin/categoryManagement");
-      });
+      }).catch((err) => {
+        const error = { ...err }
+
+        let errors
+        if (error.code === 11000) {
+          errors = handleDuplicate(error)
+          res.render('admin/addCategory', { page: "catees", errors, admin })
+        }
+      })
     } catch (err) {
       console.log(err, "hellooooooo");
-       next(err)
+      next(err)
     }
   },
   // ---------------------------------------------------------------------------
   // EDIT CATEGORY RENDER-----------------------------------------------------
-  editCategory: async (req, res) => {
+  editCategory: async (req, res, next) => {
     try {
+      let admin = req.session.admin;
       let Id = req.params.id;
 
       let categoryData = await Category.findOne({ _id: objectid(Id) });
 
-      res.render("admin/editCategory", { categoryData });
+      res.render("admin/editCategory", { categoryData, admin });
     } catch (err) {
       next(err);
     }
   },
   //
   // EDIT CATEGORY POST-----------------------------------------------------------
-  editCategoryPost: async (req, res) => {
+  editCategoryPost: async (req, res, next) => {
     try {
       let Id = req.params.id;
       await Category.findByIdAndUpdate(
@@ -310,7 +354,7 @@ module.exports = {
   },
   // --------------------------------------------------------------------------
   // DELETE CATEGORY-----------------------------------------------------------
-  deleteCategory: async (req, res) => {
+  deleteCategory: async (req, res, next) => {
     try {
       let Id = req.params.id;
       let category = await Category.findByIdAndUpdate(
@@ -323,19 +367,31 @@ module.exports = {
     }
   },
   // ----------------------------------------------------------------------------------
-  viewCoupen: async (req, res) => {
-    let admin = req.session.admin;
-    let coupendata = await Coupen.find();
-    console.log(coupendata);
-    res.render("admin/viewCoupen", { admin, coupendata });
-  },
-  addCoupen: (req, res) => {
-    let admin = req.session.admin;
-
-    res.render("admin/addCoupen", { admin });
-  },
-  addCoupenPost: async (req, res) => {
+  viewCoupen: async (req, res, next) => {
     try {
+      let admin = req.session.admin;
+      let coupendata = await Coupen.find();
+      console.log(coupendata);
+      res.render("admin/viewCoupen", { admin, coupendata });
+    } catch (err) {
+      next(err);
+    }
+
+  },
+  addCoupen: (req, res, next) => {
+    try {
+      let admin = req.session.admin;
+
+      res.render("admin/addCoupen", { admin, errors: '' });
+    } catch (err) {
+      next(err);
+    }
+
+  },
+  addCoupenPost: async (req, res, next) => {
+    try {
+      let admin = req.session.admin;
+
       coupenData = Coupen({
         coupenname: req.body.coupenname,
         coupenid: req.body.coupenid,
@@ -347,57 +403,112 @@ module.exports = {
       });
       await coupenData.save().then(() => {
         res.redirect("/admin/addCoupen");
+      }).catch((err) => {
+        const error = { ...err }
+
+        let errors
+        if (error.code === 11000) {
+          errors = couponduplicate(error)
+          res.render('admin/addCoupen', { page: "catees", errors, admin })
+        }
       });
     } catch (err) {
       next(err);
     }
   },
-  editCoupen: (req, res) => {
-    let admin = req.session.admin;
-    res.render("admin/editCoupen", { admin });
+  editCoupen: (req, res, next) => {
+    try {
+      let admin = req.session.admin;
+      res.render("admin/editCoupen", { admin });
+    } catch (err) {
+      next(err);
+    }
+
   },
-  viewBanner: async (req, res) => {
-    let admin = req.session.admin;
-    let banner = await Banner.find();
-    res.render("admin/viewBanner", { admin, banner });
+  viewBanner: async (req, res, next) => {
+    try {
+      let admin = req.session.admin;
+      let banner = await Banner.find({ Status: "true" });
+      res.render("admin/viewBanner", { admin, banner });
+    } catch (err) {
+      next(err);
+    }
+
   },
-  addBanner: async (req, res) => {
-    let admin = req.session.admin;
+  addBanner: async (req, res, next) => {
+    try {
+      let admin = req.session.admin;
 
-    res.render("admin/addBanner", { admin });
+      res.render("admin/addBanner", { admin });
+    } catch (err) {
+      next(err);
+    }
+
   },
-  addBannerPost: async (req, res) => {
-    const { bannerName, discription } = req.body;
+  addBannerPost: async (req, res, next) => {
+    try {
+      const { bannerName, discription } = req.body;
 
-    let bannerimage = req.files.map((file) => file.filename);
+      let bannerimage = req.files.map((file) => file.filename);
 
-    console.log(bannerimage);
+      console.log(bannerimage);
 
-    const newBanner = Banner({
-      bannerName,
-      discription,
-      image: bannerimage,
-    });
-    console.log(newBanner);
+      const newBanner = Banner({
+        bannerName,
+        discription,
+        image: bannerimage,
+      });
+      console.log(newBanner);
 
-    await newBanner.save().then(() => {
+      await newBanner.save().then(() => {
+        res.redirect("/admin/viewBanner");
+      });
+    } catch (err) {
+      next(err);
+    }
+
+  },
+  // DELETE BANNER-----------------------------------------------
+  deleteBanner: async (req, res, next) => {
+    try {
+      let Id = req.params.id;
+
+      let deleteData = await Banner.findByIdAndUpdate(
+        { _id: Id },
+        { Status: "false" }
+      );
+
       res.redirect("/admin/viewBanner");
-    });
-  },
 
-  viewOrder:async(req,res)=>{
-    let admin = req.session.admin;
-    let order=await Order.find()
-    console.log(order);
-    res.render('admin/viewOrder',{admin,order})
+    } catch (err) {
+      next(err);
+    }
   },
-  editOrder:async(req,res)=>{
-    let admin = req.session.admin;
-    let orderId=req.params.id
-    let order=await Order.findOne({_id:orderId})
-    console.log(order,"oooooooooooooooooooooooo");
+  // ---------------------------------------------------------------
 
-    res.render('admin/editOrder',{admin,order})
+  viewOrder: async (req, res, next) => {
+    try {
+      let admin = req.session.admin;
+      let order = await Order.find().sort({ order_date: -1 })
+      console.log(order);
+      res.render('admin/viewOrder', { admin, order })
+    } catch (err) {
+      next(err);
+    }
+
+  },
+  editOrder: async (req, res, next) => {
+    try {
+      let admin = req.session.admin;
+      let orderId = req.params.id
+      let order = await Order.findOne({ _id: orderId })
+
+
+      res.render('admin/editOrder', { admin, order })
+    } catch (err) {
+      next(err);
+    }
+
   },
   deliveryStatus: async (req, res, next) => {
     try {
@@ -422,20 +533,30 @@ module.exports = {
     }
 
   },
-  inVoice:async(req,res)=>{
-    let admin = req.session.admin;
-    let orderId = req.params.id
-   
-    let orderInfo = await Order.findOne({ _id:orderId}).populate(['products.item','userId'])
-    console.log(orderInfo,"kkkkkkkkkkkkkkk")
-    res.render('admin/invoice',{admin})
+  inVoice: async (req, res, next) => {
+    try {
+      let admin = req.session.admin;
+      let orderId = req.params.id
+
+      let order = await Order.findOne({ _id: orderId }).populate(['products.item', 'userId'])
+
+      res.render('admin/invoice', { admin, order })
+    } catch (error) {
+      next();
+    }
+
   },
-  salesAsk:(req,res)=>{
-    let admin = req.session.admin;
-    res.render('admin/salesAsk',{admin})
+  salesAsk: (req, res, next) => {
+    try {
+      let admin = req.session.admin;
+      res.render('admin/salesAsk', { admin })
+    } catch (error) {
+      next();
+    }
+
   },
-  salesReport:async(req,res,next)=>{
-   
+  salesReport: async (req, res, next) => {
+
     console.log('report');
     try {
       console.log(req.body)
@@ -458,15 +579,15 @@ module.exports = {
             as: "user",
           },
         },
-        { $sort: { ordered_date: -1 } },
+        { $sort: { order_date: -1 } },
       ]);
-      let salesDatas=salesData
+      let salesDatas = salesData
       console.log(salesDatas, "innnn");
-      res.render('admin/salesReport', {admin, title: 'Sales Report', page: 'Sales Report', salesData })
+      res.render('admin/salesReport', { admin, title: 'Sales Report', page: 'Sales Report', salesData })
     } catch (error) {
       console.log(error);
       next(createError(404));
     }
-  
+
   }
 };

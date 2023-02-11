@@ -1,6 +1,7 @@
 var User = require("../models/userModel");
 let Products = require("../models/productModel");
 let Cart = require("../models/cart");
+let Category=require("../models/categoryModel")
 let Wishlist = require("../models/wishlist");
 let Order = require("../models/orderModel");
 const Coupen = require("../models/coupenModel");
@@ -19,8 +20,8 @@ module.exports = {
       let user = req.session.user;
 
       let products = await Products.find({ Status: true });
-      let banner = await Banner.find();
-
+      let banner = await Banner.find({ Status: true });
+       console.log(products,"heyyy")
       res.render("user/userIndex", { user, products, banner });
     } catch (err) {
       console.log(err);
@@ -28,22 +29,33 @@ module.exports = {
     }
   },
   // ------------------------------------------------------
-  userLogin: (req, res) => {
-    let user = req.session.user;
-    if (req.session.loggedUser) {
-      res.redirect("/");
-    } else {
-      res.render("user/userLogin", { user });
+  userLogin: (req, res,next) => {
+    try{
+      let user = req.session.user;
+      if (req.session.loggedUser) {
+        res.redirect("/");
+      } else {
+        res.render("user/userLogin", { user });
+      }
+    }catch (error) {
+      next();
     }
+    
   },
-  userSignup: (req, res) => {
-    let user = req.session.user;
-    res.render("user/userSignup", { user });
+  userSignup: (req, res,next) => {
+    try{
+      let user = req.session.user;
+      res.render("user/userSignup", { user });
+    }catch (error) {
+      next();
+    }
+   
   },
   // -----------------------------------------------------------------------------------------
   // USER SIGNUP------------------------------------------------------------------------------
 
   userPostSignup: async (req, res) => {
+   
     let mobile = req.body.phone;
     let email = req.body.email;
 
@@ -156,16 +168,11 @@ module.exports = {
       "products.item"
     );
     console.log(cartDetails);
-    if (cartDetails.products.length == 0) {
-      res.redirect("/cart-empty");
-    } else {
+    
       res.render("user/Cart", { user, userId, cartDetails });
-    }
+    
   },
-  cartEmpty: (req, res) => {
-    let user = req.session.user;
-    res.render("user/cart-empty", { user });
-  },
+  
 
   addToCart: async (req, res) => {
     console.log("hi");
@@ -275,41 +282,44 @@ module.exports = {
     }
   },
   deleteCart: async (req, res) => {
-    let cart = req.params.cartId;
-    let proId = req.params.proId;
-    let userId = req.params.userId;
-    let product = await Products.findOne({ _id: proId });
+    // let cart = req.params.cartId;
+    // let proId = req.params.proId;
+    // let userId = req.params.userId;
+    let details=req.body
+    let product = await Products.findOne({ _id: details.proId });
     let data = await Cart.findByIdAndUpdate(
-      { _id: cart },
+      { _id: details.cart },
       {
-        $pull: { products: { item: proId } },
+        $pull: { products: { item: details.proId } },
       }
     );
     console.log(data.products[0], "hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-    const index = data.products.findIndex((obj) => obj.item == proId);
+    const index = data.products.findIndex((obj) => obj.item == details.proId);
     const proPrice = data.products[index].price;
     console.log(proPrice, "heloooooooooooooooooooooooooo");
     let datas = await Cart.findByIdAndUpdate(
-      { _id: cart },
+      { _id: details.cart },
       {
         $inc: { totalprice: -proPrice },
       },
       { new: true }
     );
     console.log(datas, "koiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-    console.log(cart, proId, userId, "sdfg");
-    res.redirect("/cart");
+    // console.log(cart, proId, userId, "sdfg");
+    // let totalPrice = datas.totalprice 
+    // let productTotal = product.Price*quantity
+    res.json({ removeProduct: true});
   },
 
   wishList: async (req, res) => {
     let user = req.session.user;
     let userId = req.session.user._id;
-    let wishlistData = await Wishlist.findOne({ user: userId }).populate(
+    let wishlists = await Wishlist.findOne({ user: userId }).populate(
       "product"
     );
-    let wishlist = wishlistData.product;
-    console.log(wishlist, "fghj");
-    res.render("user/wishlist", { user, wishlist });
+    
+    console.log(wishlists, "fghj");
+    res.render("user/wishlist", { user, wishlists });
   },
   addToWishlist: async (req, res) => {
     let userId = req.session.user._id;
@@ -328,11 +338,23 @@ module.exports = {
         product: [proId],
       };
       let newwishlist = await Wishlist.create(userWishlist);
-      console.log(newwishlist);
+      console.log(newwishlist,"kkkkkkkkkkkkkkk");
     }
     res.redirect("/");
   },
-
+  deleteWishlist: async (req, res) => {
+   
+    let details=req.body
+    
+    let data = await Wishlist.findByIdAndUpdate(
+      { _id: details.wishlist },
+      {
+        $pull: { product: details.proId } ,
+      }
+    );
+    res.json({ removeProduct: true});
+  },
+ 
   userCheckout: async (req, res) => {
     let user = req.session.user;
     let userId = req.session.user._id;
@@ -409,7 +431,7 @@ module.exports = {
       res.json({ Data });
     }
 
-    //     let deletecart = await Cart.deleteOne({ user: userId });
+        let deletecart = await Cart.deleteOne({ user: userId });
   },
   verifyPayment: (req, res) => {
     console.log(req.body, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
@@ -458,7 +480,7 @@ module.exports = {
     let userId = req.session.user._id;
     let user = await User.findOne({ _id: userId });
     console.log(user.AddressData);
-    await User.updateOne({ user: userId }, { $push: { AddressData: Address } });
+    await User.updateOne({ _id: userId }, { $push: { AddressData: Address } });
     res.redirect("/your-account");
   },
   applyCoupon: async (req, res) => {
@@ -527,7 +549,7 @@ module.exports = {
       let user = req.session.user;
       let userId = req.session.user._id;
 
-      let order = await Order.find({ userId }).populate("products.item");
+      let order = await Order.find({ userId }).sort({order_date:-1}).populate("products.item");
       console.log(order);
 
       res.render("user/viewOrder", { user, order });
@@ -539,7 +561,7 @@ module.exports = {
     let orderId = req.params.id;
     let user = req.session.user;
     let userId = req.session.user._id;
-    let order = await Order.findOne({ userId, _id: orderId });
+    let order = await Order.findOne({ userId, _id: orderId })
 
     console.log(order, "here");
     res.render("user/order-details", { user, order });
@@ -559,4 +581,30 @@ module.exports = {
     console.log(Data, "llllllllllllllllllllllll");
     res.redirect("/order-details/" + orderId);
   },
+  aboutUs:(req,res)=>{
+    try{
+      let user = req.session.user;
+       res.render('user/aboutUs',{user})
+    }catch (err) {
+      next(err);
+    }
+  },
+  shopPage:async(req,res)=>{
+    try{
+      let user = req.session.user;
+      let products=await Products.find({Status:true})
+      let category=await Category.find({Status:true})
+       res.render('user/shopPage',{user,category,products})
+    }catch (err) {
+      next(err);
+    }
+  },
+  categoryProduct:async(req,res)=>{
+    let catId = req.query.id;
+    let catName=await Category.findById({_id:catId})
+    let catgoryname=catName.categoryName
+    let catPro=await Products.find({Category:catgoryname})
+    console.log(catPro,"kkkkkkkkkkkkkkk");
+    res.json({catPro})
+  }
 };

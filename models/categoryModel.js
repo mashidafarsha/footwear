@@ -12,6 +12,12 @@ const categorySchema=new mongoose.Schema({
         require:true,
        
     },
+    Status:{
+        type:Boolean,
+        require:true,
+        default:"true"
+    }
+
     // Image:{
     //     type:String,
    
