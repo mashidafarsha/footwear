@@ -41,10 +41,13 @@ app.use('/admin',adminRouter);
 
 // Error route
 
-// app.use(function (req, res, next) {
-// console.log('hiii errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr');
-//   next(createError(404));
-// });
+app.use(function (req, res, next) {
+console.log('hiii errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr');
+  // next(createError(`Not found this page ${req.originalUrl}`,404));
+  const err = createError('hiiiii')
+  err.status=404
+  next(err)
+});
 
 
 // app.use(function (err, req, res, next) {
@@ -61,16 +64,19 @@ app.use('/admin',adminRouter);
  
 // });
 app.use( (err, req, res, next) => {
+  console.log(err.status,"asdfghjk");
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
   let errStatus = err.status || 500;
   // render the error page
-  console.log(err);
+  console.log(errStatus,"status");
   res.status(errStatus);
   if(errStatus==404) {
     console.error(err);
-    res.render('error/error')
+    res.render('error/error',{userz:null})
   }else{
         res.send('<div style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; text-align:center;"><h2 style="color:red;">500 |  Internal error detected!</h2> We will be back soon..</div>')
-        // res.render('error');
+        //  res.render('error');
         
     }
 });

@@ -50,9 +50,14 @@
 </head>
 
 <body>
+ <% if(userz){ %>
   <%- include('../partials/userpartials/userheader.ejs') %>
+ <% } %>
+  
     <%- body %>
+    <% if(userz){ %>
   <%- include('../partials/userpartials/userfooter.ejs') %>
+  <% } %>
       <!-- ALL JS FILES -->
 
       <script src="/js/popper.min.js"></script>
