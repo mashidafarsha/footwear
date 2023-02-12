@@ -116,9 +116,11 @@ module.exports = {
 
 
   },
-  otpLogin: (req, res, next) => {
+  otpLogin:async (req, res, next) => {
     try {
       let user = req.session.user;
+      
+      
       res.render("user/otpverification", { user,userz:true });
     } catch (error) {
       next();

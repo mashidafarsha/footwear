@@ -40,7 +40,7 @@ module.exports = {
         },
         {
           $group: {
-            _id: { $dateToString: { format: "%Y-%m-%d", date: "$order_date" } },
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$order_date", } },
             count: { $sum: 1 },
           },
         },
@@ -51,7 +51,7 @@ module.exports = {
 
       console.log(delivered);
       console.log(salesChartDt);
-      res.render("admin/adminIndex", { admin, ordered, delivered, placed, salesChartDt });
+      res.render("admin/adminIndex", { admin, ordered, delivered, placed, salesChartDt,adminz:true });
     } catch (err) {
       next(err);
     }
@@ -66,7 +66,7 @@ module.exports = {
         res.redirect("/admin");
       } else {
         let admin = req.session.admin;
-        res.render("admin/adminLogin", { admin });
+        res.render("admin/adminLogin", { admin ,adminz:false});
       }
     } catch (err) {
       next(err);
@@ -121,7 +121,7 @@ module.exports = {
       let admin = req.session.admin;
       let productData = await Products.find({ Status: "true" });
 
-      res.render("admin/viewProducts", { productData, admin });
+      res.render("admin/viewProducts", { productData,admin,adminz:true });
     } catch (err) {
       next(err);
     }
@@ -132,7 +132,7 @@ module.exports = {
     try {
       let admin = req.session.admin;
       let categoryData = await Category.find({ Status: "true" });
-      res.render("admin/addProduct", { categoryData, admin });
+      res.render("admin/addProduct", { categoryData, admin ,adminz:true});
     } catch (err) {
       next(err);
     }
@@ -173,7 +173,7 @@ module.exports = {
       let product = await Products.findOne({ _id: Id });
       console.log(product, "asd");
       console.log(category);
-      res.render("admin/editProduct", { product, category, admin });
+      res.render("admin/editProduct", { product, category, admin,adminz:true });
     } catch (err) {
       next(err);
     }
@@ -233,7 +233,7 @@ module.exports = {
     try {
       let admin = req.session.admin;
       let userData = await User.find();
-      res.render("admin/userManagement", { userData, admin });
+      res.render("admin/userManagement", { userData, admin,adminz:true });
     } catch (err) {
       next(err);
     }
@@ -278,7 +278,7 @@ module.exports = {
       let admin = req.session.admin;
       let categoryData = await Category.find({ Status: "true" });
 
-      res.render("admin/categoryManagement", { categoryData, admin });
+      res.render("admin/categoryManagement", { categoryData, admin,adminz:true });
     } catch (err) {
       next(err);
     }
@@ -288,7 +288,7 @@ module.exports = {
   addCategory: (req, res, next) => {
     try {
       let admin = req.session.admin;
-      res.render("admin/addCategory", { admin, errors: '' });
+      res.render("admin/addCategory", { admin, errors: '',adminz:true });
     } catch (err) {
       next(err);
     }
@@ -327,7 +327,7 @@ module.exports = {
 
       let categoryData = await Category.findOne({ _id: objectid(Id) });
 
-      res.render("admin/editCategory", { categoryData, admin });
+      res.render("admin/editCategory", { categoryData, admin ,adminz:true});
     } catch (err) {
       next(err);
     }
@@ -372,7 +372,7 @@ module.exports = {
       let admin = req.session.admin;
       let coupendata = await Coupen.find();
       console.log(coupendata);
-      res.render("admin/viewCoupen", { admin, coupendata });
+      res.render("admin/viewCoupen", { admin, coupendata,adminz:true });
     } catch (err) {
       next(err);
     }
@@ -382,7 +382,7 @@ module.exports = {
     try {
       let admin = req.session.admin;
 
-      res.render("admin/addCoupen", { admin, errors: '' });
+      res.render("admin/addCoupen", { admin, errors: '',adminz:true });
     } catch (err) {
       next(err);
     }
@@ -419,7 +419,7 @@ module.exports = {
   editCoupen: (req, res, next) => {
     try {
       let admin = req.session.admin;
-      res.render("admin/editCoupen", { admin });
+      res.render("admin/editCoupen", { admin ,adminz:true});
     } catch (err) {
       next(err);
     }
@@ -429,7 +429,7 @@ module.exports = {
     try {
       let admin = req.session.admin;
       let banner = await Banner.find({ Status: "true" });
-      res.render("admin/viewBanner", { admin, banner });
+      res.render("admin/viewBanner", { admin, banner,adminz:true });
     } catch (err) {
       next(err);
     }
@@ -439,7 +439,7 @@ module.exports = {
     try {
       let admin = req.session.admin;
 
-      res.render("admin/addBanner", { admin });
+      res.render("admin/addBanner", { admin,adminz:true });
     } catch (err) {
       next(err);
     }
@@ -491,7 +491,7 @@ module.exports = {
       let admin = req.session.admin;
       let order = await Order.find().sort({ order_date: -1 })
       console.log(order);
-      res.render('admin/viewOrder', { admin, order })
+      res.render('admin/viewOrder', { admin, order,adminz:true })
     } catch (err) {
       next(err);
     }
@@ -504,7 +504,7 @@ module.exports = {
       let order = await Order.findOne({ _id: orderId })
 
 
-      res.render('admin/editOrder', { admin, order })
+      res.render('admin/editOrder', { admin, order ,adminz:true})
     } catch (err) {
       next(err);
     }
@@ -540,7 +540,7 @@ module.exports = {
 
       let order = await Order.findOne({ _id: orderId }).populate(['products.item', 'userId'])
 
-      res.render('admin/invoice', { admin, order })
+      res.render('admin/invoice', { admin, order,adminz:true })
     } catch (error) {
       next();
     }
@@ -549,7 +549,7 @@ module.exports = {
   salesAsk: (req, res, next) => {
     try {
       let admin = req.session.admin;
-      res.render('admin/salesAsk', { admin })
+      res.render('admin/salesAsk', { admin,adminz:true })
     } catch (error) {
       next();
     }
@@ -583,7 +583,7 @@ module.exports = {
       ]);
       let salesDatas = salesData
       console.log(salesDatas, "innnn");
-      res.render('admin/salesReport', { admin, title: 'Sales Report', page: 'Sales Report', salesData })
+      res.render('admin/salesReport', { admin, title: 'Sales Report', page: 'Sales Report', salesData ,adminz:true})
     } catch (error) {
       console.log(error);
       next(createError(404));

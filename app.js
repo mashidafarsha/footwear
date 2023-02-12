@@ -73,7 +73,7 @@ app.use( (err, req, res, next) => {
   res.status(errStatus);
   if(errStatus==404) {
     console.error(err);
-    res.render('error/error',{userz:null})
+    res.render('error/error',{userz:null,adminz:null})
   }else{
         res.send('<div style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; text-align:center;"><h2 style="color:red;">500 |  Internal error detected!</h2> We will be back soon..</div>')
         //  res.render('error');
