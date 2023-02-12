@@ -1,12 +1,9 @@
-// const { promiseImpl } = require('ejs');
-// let env=require('dotenv')
-const accountSid = 'ACe61c99042a6942d32c563933f9431c78';
-const serviceid = 'VA3a22d4de471a465c529e4d6cd316a326';
-const authToken = 'fae507a7d1eef4b78b948e65a628bed5';
 
-// const accountSid = process.env.Account_SID;
-// const serviceid = process.env.Service_SID;
-// const authToken = process.env.Auth_Token;
+const accountSid = 'ACe61c99042a6942d32c563933f9431c78'
+const serviceid = 'VA3a22d4de471a465c529e4d6cd316a326'
+const authToken = 'fae507a7d1eef4b78b948e65a628bed5'
+
+
 
 
 
