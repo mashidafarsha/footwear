@@ -479,7 +479,7 @@ module.exports = {
         "deliverystatus.ordered.state": true,
       });
       let orderDatas = await orderData.save();
-      console.log(order,"ppppppppppppppppppppp");
+     
       if (req.body["Shipping-Method"] === "COD") {
         res.json({ codStatus: true });
       } else {
