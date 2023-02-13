@@ -5,6 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>.squireImg{
+      object-fit: cover;
+      width: 220px;
+      height: 240px;
+      margin: auto;
+  }</style>
   </head>
 
   <body>
@@ -24,7 +30,7 @@
             </div>
             <% }else{ %>
             <div id="data">
-              <%products.forEach(function(products) { %>
+            
               <div id="datas" class="right-product-box">
                 <div class="product-categorie-box">
                   <div class="tab-content">
@@ -34,6 +40,7 @@
                       id="grid-view"
                     >
                       <div class="row">
+                        <%products.forEach(function(products) { %>
                         <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
                           <div class="products-single fix">
                             <div class="box-img-hover">
@@ -42,7 +49,7 @@
                               </div>
                               <img
                                 src="/image/product-images/<%=products.Image[0]%>"
-                                class="img-fluid"
+                                class="img-fluid squireImg"
                                 alt="Image"
                               />
                               <div class="mask-icon">
@@ -84,19 +91,20 @@
                             </div>
                           </div>
                         </div>
+                        <% }) %>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <% }) %>
+             
             </div>
             <%} %>
           </div>
           <div class="col-xl-3 col-lg-3 col-sm-12 col-xs-12 sidebar-shop-left">
             <div class="product-categori">
-              <div class="search-product">
+              <!-- <div class="search-product">
                 <form action="#">
                   <input
                     class="form-control"
@@ -105,7 +113,7 @@
                   />
                   <button type="submit"><i class="fa fa-search"></i></button>
                 </form>
-              </div>
+              </div> -->
               <div class="filter-sidebar-left">
                 <div class="title-left">
                   <h3>Categories</h3>

@@ -25,8 +25,10 @@ module.exports = {
 
       let products = await Products.find({ Status: true });
       let banner = await Banner.find({ Status: true });
+    
+     
       console.log(products, "heyyy")
-      res.render("user/userIndex", { user, products, banner,userz:true });
+      res.render("user/userIndex", { user, products, banner,userz:true});
     } catch (err) {
       console.log(err);
       next(err);
@@ -472,7 +474,8 @@ module.exports = {
         products: cart.products,
         "deliverystatus.ordered.state": true,
       });
-      let order = await orderData.save();
+      let orderDatas = await orderData.save();
+      console.log(order,"ppppppppppppppppppppp");
       if (req.body["Shipping-Method"] === "COD") {
         res.json({ codStatus: true });
       } else {
