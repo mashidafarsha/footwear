@@ -189,7 +189,7 @@ module.exports = {
       );
       console.log(cartDetails);
 
-      res.render("user/Cart", { user, userId, cartDetails ,userz:true});
+      res.render("user/cart", { user, userId, cartDetails ,userz:true});
 
     } catch (err) {
       console.log(err
