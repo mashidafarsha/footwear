@@ -192,6 +192,10 @@ module.exports = {
       res.render("user/Cart", { user, userId, cartDetails ,userz:true});
 
     } catch (err) {
+      console.log(err
+        
+        
+        );
       next(err);
     }
 
@@ -708,3 +712,4 @@ module.exports = {
   }
 
 };
+
