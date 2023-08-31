@@ -8,9 +8,9 @@ let adminRouter = require("./routes/admin");
 // const mongooseDB = require("./config/connection");
 const clearcache = require("./middilwear/cache");
 const mongoosedb=require("./config/connection")
-mongoosedb.init()
-let session = require("express-session");
 
+let session = require("express-session");
+mongoosedb.init()
 app.use(clearcache);
 
 // view engine setup
