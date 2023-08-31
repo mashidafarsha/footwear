@@ -10,6 +10,15 @@ const clearcache = require("./middilwear/cache");
 const mongoosedb=require("./config/connection")
 
 let session = require("express-session");
+
+app.use(
+  session({
+    secret: "key",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000000 },
+  })
+);
 mongoosedb.init()
 app.use(clearcache);
 
@@ -24,14 +33,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(
-  session({
-    secret: "key",
-    resave: false,
-    saveUninitialized: true,
-    cookie: { maxAge: 60000000 },
-  })
-);
+
 
 app.use("/", userRouter);
 app.use("/admin", adminRouter);
