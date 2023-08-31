@@ -5,9 +5,10 @@ let app = express();
 const expressLayouts = require("express-ejs-layouts");
 let userRouter = require("./routes/user");
 let adminRouter = require("./routes/admin");
-const mongooseDB = require("./config/connection");
+// const mongooseDB = require("./config/connection");
 const clearcache = require("./middilwear/cache");
-mongooseDB.init();
+const mongoosedb=require('./config/dbconnection')
+mongoosedb.init()
 let session = require("express-session");
 
 app.use(clearcache);

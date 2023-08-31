@@ -1,17 +1,23 @@
-let env=require('dotenv')
 const mongoose = require("mongoose");
-env.config()
+let env=require('dotenv').config()
 
-let dbinit = {
-  init:()=>{
-
-    mongoose.connect(process.env.MONGO_URL)
-    const db = mongoose.connection;
-   
-    db.on("error", console.error.bind(console, "connection error: "));
-    db.once("open", function () {
-      console.log("Connected successfully");
-    });
-  }
+let dbinit={
+    init:()=>{
+        mongoose.connect(process.env.MONGODB_URL,
+            {
+              useNewUrlParser: true,
+              
+              useUnifiedTopology: true
+            }
+          );
+          const db= mongoose.connection;
+          db.on("error", console.error.bind(console, "connection error: "));
+          db.once("open", function () {
+            console.log("Successfully Connected Port 27017");
+          });
+    }
+    
 }
+
+
 module.exports = dbinit
