@@ -7,7 +7,7 @@ let userRouter = require("./routes/user");
 let adminRouter = require("./routes/admin");
 // const mongooseDB = require("./config/connection");
 const clearcache = require("./middilwear/cache");
-const mongoosedb=require('./config/dbconnection')
+const mongoosedb=require("./config/connection")
 mongoosedb.init()
 let session = require("express-session");
 
