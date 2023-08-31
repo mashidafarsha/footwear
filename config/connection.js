@@ -3,7 +3,7 @@ let env=require('dotenv').config()
 
 let dbinit={
     init:()=>{
-        mongoose.connect(process.env.MONGODB_URL,
+        mongoose.connect(process.env.MONGO_URL,
             {
               useNewUrlParser: true,
               
