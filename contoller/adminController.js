@@ -4,10 +4,10 @@ const Products = require("../models/productModel");
 const Category = require("../models/categoryModel");
 const Coupen = require("../models/coupenModel");
 let Banner = require("../models/bannerModel");
-let Order = require("../models/orderModel")
-const createError = require('http-errors')
-let { handleDuplicate } = require('../error/dbError')
-let { couponduplicate } = require('../error/dbError')
+let Order = require("../models/orderModel");
+const createError = require("http-errors");
+let { handleDuplicate } = require("../error/dbError");
+let { couponduplicate } = require("../error/dbError");
 var objectid = require("objectid");
 
 module.exports = {
@@ -16,9 +16,12 @@ module.exports = {
   Home: async (req, res, next) => {
     try {
       let admin = req.session.admin;
-      let ordered = (await Order.find({ 'deliverystatus.ordered.state': true })).length
-      let delivered = (await Order.find({ 'deliverystatus.delivered.state': true })).length
-      let placed = (await Order.find({ status: "placed" })).length
+      let ordered = (await Order.find({ "deliverystatus.ordered.state": true }))
+        .length;
+      let delivered = (
+        await Order.find({ "deliverystatus.delivered.state": true })
+      ).length;
+      let placed = (await Order.find({ status: "placed" })).length;
 
       const startOfMonth = new Date();
       startOfMonth.setDate(1);
@@ -40,7 +43,7 @@ module.exports = {
         },
         {
           $group: {
-            _id: { $dateToString: { format: "%Y-%m-%d", date: "$order_date", } },
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$order_date" } },
             count: { $sum: 1 },
           },
         },
@@ -51,7 +54,14 @@ module.exports = {
 
       console.log(delivered);
       console.log(salesChartDt);
-      res.render("admin/adminIndex", { admin, ordered, delivered, placed, salesChartDt,adminz:true });
+      res.render("admin/adminIndex", {
+        admin,
+        ordered,
+        delivered,
+        placed,
+        salesChartDt,
+        adminz: true,
+      });
     } catch (err) {
       next(err);
     }
@@ -66,7 +76,7 @@ module.exports = {
         res.redirect("/admin");
       } else {
         let admin = req.session.admin;
-        res.render("admin/adminLogin", { admin ,adminz:false});
+        res.render("admin/adminLogin", { admin, adminz: false });
       }
     } catch (err) {
       next(err);
@@ -77,7 +87,7 @@ module.exports = {
   // LOGIN POST---------------------------------------------
 
   adminLogin: async (req, res, next) => {
-    console.log('login')
+    console.log("login");
     try {
       const { Email, password } = req.body;
       console.log(Email);
@@ -90,11 +100,10 @@ module.exports = {
         const isMatch = await Admin.findOne({ password });
 
         if (isMatch) {
-          console.log('Successs');
+          console.log("Successs");
           req.session.loggedIn = true;
           req.session.admin = admin;
         }
-
 
         res.redirect("/admin");
       }
@@ -121,7 +130,7 @@ module.exports = {
       let admin = req.session.admin;
       let productData = await Products.find({ Status: "true" });
 
-      res.render("admin/viewProducts", { productData,admin,adminz:true });
+      res.render("admin/viewProducts", { productData, admin, adminz: true });
     } catch (err) {
       next(err);
     }
@@ -132,7 +141,7 @@ module.exports = {
     try {
       let admin = req.session.admin;
       let categoryData = await Category.find({ Status: "true" });
-      res.render("admin/addProduct", { categoryData, admin ,adminz:true});
+      res.render("admin/addProduct", { categoryData, admin, adminz: true });
     } catch (err) {
       next(err);
     }
@@ -173,7 +182,12 @@ module.exports = {
       let product = await Products.findOne({ _id: Id });
       console.log(product, "asd");
       console.log(category);
-      res.render("admin/editProduct", { product, category, admin,adminz:true });
+      res.render("admin/editProduct", {
+        product,
+        category,
+        admin,
+        adminz: true,
+      });
     } catch (err) {
       next(err);
     }
@@ -198,7 +212,7 @@ module.exports = {
             Price: req.body.price,
             Date: req.body.date,
             Stock: req.body.stock,
-            Image: image
+            Image: image,
           },
         }
       ).then(() => {
@@ -233,7 +247,7 @@ module.exports = {
     try {
       let admin = req.session.admin;
       let userData = await User.find();
-      res.render("admin/userManagement", { userData, admin,adminz:true });
+      res.render("admin/userManagement", { userData, admin, adminz: true });
     } catch (err) {
       next(err);
     }
@@ -278,7 +292,11 @@ module.exports = {
       let admin = req.session.admin;
       let categoryData = await Category.find({ Status: "true" });
 
-      res.render("admin/categoryManagement", { categoryData, admin,adminz:true });
+      res.render("admin/categoryManagement", {
+        categoryData,
+        admin,
+        adminz: true,
+      });
     } catch (err) {
       next(err);
     }
@@ -288,7 +306,7 @@ module.exports = {
   addCategory: (req, res, next) => {
     try {
       let admin = req.session.admin;
-      res.render("admin/addCategory", { admin, errors: '',adminz:true });
+      res.render("admin/addCategory", { admin, errors: "", adminz: true });
     } catch (err) {
       next(err);
     }
@@ -302,20 +320,23 @@ module.exports = {
         categoryName: req.body.category,
         Description: req.body.description,
       });
-      await categoryData.save().then(() => {
-        res.redirect("/admin/categoryManagement");
-      }).catch((err) => {
-        const error = { ...err }
+      await categoryData
+        .save()
+        .then(() => {
+          res.redirect("/admin/categoryManagement");
+        })
+        .catch((err) => {
+          const error = { ...err };
 
-        let errors
-        if (error.code === 11000) {
-          errors = handleDuplicate(error)
-          res.render('admin/addCategory', { page: "catees", errors, admin })
-        }
-      })
+          let errors;
+          if (error.code === 11000) {
+            errors = handleDuplicate(error);
+            res.render("admin/addCategory", { page: "catees", errors, admin });
+          }
+        });
     } catch (err) {
       console.log(err, "hellooooooo");
-      next(err)
+      next(err);
     }
   },
   // ---------------------------------------------------------------------------
@@ -327,7 +348,7 @@ module.exports = {
 
       let categoryData = await Category.findOne({ _id: objectid(Id) });
 
-      res.render("admin/editCategory", { categoryData, admin ,adminz:true});
+      res.render("admin/editCategory", { categoryData, admin, adminz: true });
     } catch (err) {
       next(err);
     }
@@ -372,21 +393,19 @@ module.exports = {
       let admin = req.session.admin;
       let coupendata = await Coupen.find();
       console.log(coupendata);
-      res.render("admin/viewCoupen", { admin, coupendata,adminz:true });
+      res.render("admin/viewCoupen", { admin, coupendata, adminz: true });
     } catch (err) {
       next(err);
     }
-
   },
   addCoupen: (req, res, next) => {
     try {
       let admin = req.session.admin;
 
-      res.render("admin/addCoupen", { admin, errors: '',adminz:true });
+      res.render("admin/addCoupen", { admin, errors: "", adminz: true });
     } catch (err) {
       next(err);
     }
-
   },
   addCoupenPost: async (req, res, next) => {
     try {
@@ -401,17 +420,20 @@ module.exports = {
         expdate: req.body.expdate,
         offer: req.body.offer,
       });
-      await coupenData.save().then(() => {
-        res.redirect("/admin/addCoupen");
-      }).catch((err) => {
-        const error = { ...err }
+      await coupenData
+        .save()
+        .then(() => {
+          res.redirect("/admin/addCoupen");
+        })
+        .catch((err) => {
+          const error = { ...err };
 
-        let errors
-        if (error.code === 11000) {
-          errors = couponduplicate(error)
-          res.render('admin/addCoupen', { page: "catees", errors, admin })
-        }
-      });
+          let errors;
+          if (error.code === 11000) {
+            errors = couponduplicate(error);
+            res.render("admin/addCoupen", { page: "catees", errors, admin });
+          }
+        });
     } catch (err) {
       next(err);
     }
@@ -419,31 +441,28 @@ module.exports = {
   editCoupen: (req, res, next) => {
     try {
       let admin = req.session.admin;
-      res.render("admin/editCoupen", { admin ,adminz:true});
+      res.render("admin/editCoupen", { admin, adminz: true });
     } catch (err) {
       next(err);
     }
-
   },
   viewBanner: async (req, res, next) => {
     try {
       let admin = req.session.admin;
       let banner = await Banner.find({ Status: "true" });
-      res.render("admin/viewBanner", { admin, banner,adminz:true });
+      res.render("admin/viewBanner", { admin, banner, adminz: true });
     } catch (err) {
       next(err);
     }
-
   },
   addBanner: async (req, res, next) => {
     try {
       let admin = req.session.admin;
 
-      res.render("admin/addBanner", { admin,adminz:true });
+      res.render("admin/addBanner", { admin, adminz: true });
     } catch (err) {
       next(err);
     }
-
   },
   addBannerPost: async (req, res, next) => {
     try {
@@ -466,7 +485,6 @@ module.exports = {
     } catch (err) {
       next(err);
     }
-
   },
   // DELETE BANNER-----------------------------------------------
   deleteBanner: async (req, res, next) => {
@@ -479,7 +497,6 @@ module.exports = {
       );
 
       res.redirect("/admin/viewBanner");
-
     } catch (err) {
       next(err);
     }
@@ -489,77 +506,97 @@ module.exports = {
   viewOrder: async (req, res, next) => {
     try {
       let admin = req.session.admin;
-      let order = await Order.find().sort({ order_date: -1 })
+      let order = await Order.find().sort({ order_date: -1 });
       console.log(order);
-      res.render('admin/viewOrder', { admin, order,adminz:true })
+      res.render("admin/viewOrder", { admin, order, adminz: true });
     } catch (err) {
       next(err);
     }
-
   },
   editOrder: async (req, res, next) => {
     try {
       let admin = req.session.admin;
-      let orderId = req.params.id
-      let order = await Order.findOne({ _id: orderId })
+      let orderId = req.params.id;
+      let order = await Order.findOne({ _id: orderId });
 
-
-      res.render('admin/editOrder', { admin, order ,adminz:true})
+      res.render("admin/editOrder", { admin, order, adminz: true });
     } catch (err) {
       next(err);
     }
-
   },
   deliveryStatus: async (req, res, next) => {
     try {
-      orderId = req.params.id
+      orderId = req.params.id;
 
-      if (req.body.deliveryStatus == 'shipped') {
-        Order.updateOne({ _id: orderId }, { $set: { 'deliverystatus.shipped.state': true, 'deliverystatus.shipped.date': Date.now() } }).then((data) => {
-          res.redirect('/admin/editOrder/' + orderId)
-        })
-      } else if (req.body.deliveryStatus == 'outForDelivery') {
-        Order.updateOne({ _id: orderId }, { $set: { 'deliverystatus.out_for_delivery.state': true, 'delivery_status.out_for_delivery.date': Date.now() } }).then((data) => {
-          res.redirect('/admin/editOrder/' + orderId)
-        })
-      } else if (req.body.deliveryStatus == 'delivered') {
-        Order.updateOne({ _id: orderId }, { $set: { 'deliverystatus.delivered.state': true, 'delivery_status.delivered.date': Date.now() } }).then((data) => {
-          res.redirect('/admin/editOrder/' + orderId)
-        })
+      if (req.body.deliveryStatus == "shipped") {
+        Order.updateOne(
+          { _id: orderId },
+          {
+            $set: {
+              "deliverystatus.shipped.state": true,
+              "deliverystatus.shipped.date": Date.now(),
+            },
+          }
+        ).then((data) => {
+          res.redirect("/admin/editOrder/" + orderId);
+        });
+      } else if (req.body.deliveryStatus == "outForDelivery") {
+        Order.updateOne(
+          { _id: orderId },
+          {
+            $set: {
+              "deliverystatus.out_for_delivery.state": true,
+              "delivery_status.out_for_delivery.date": Date.now(),
+            },
+          }
+        ).then((data) => {
+          res.redirect("/admin/editOrder/" + orderId);
+        });
+      } else if (req.body.deliveryStatus == "delivered") {
+        Order.updateOne(
+          { _id: orderId },
+          {
+            $set: {
+              "deliverystatus.delivered.state": true,
+              "delivery_status.delivered.date": Date.now(),
+            },
+          }
+        ).then((data) => {
+          res.redirect("/admin/editOrder/" + orderId);
+        });
       }
     } catch (error) {
       console.log(error);
       next();
     }
-
   },
   inVoice: async (req, res, next) => {
     try {
       let admin = req.session.admin;
-      let orderId = req.params.id
+      let orderId = req.params.id;
 
-      let order = await Order.findOne({ _id: orderId }).populate(['products.item', 'userId'])
+      let order = await Order.findOne({ _id: orderId }).populate([
+        "products.item",
+        "userId",
+      ]);
 
-      res.render('admin/invoice', { admin, order,adminz:true })
+      res.render("admin/invoice", { admin, order, adminz: true });
     } catch (error) {
       next();
     }
-
   },
   salesAsk: (req, res, next) => {
     try {
       let admin = req.session.admin;
-      res.render('admin/salesAsk', { admin,adminz:true })
+      res.render("admin/salesAsk", { admin, adminz: true });
     } catch (error) {
       next();
     }
-
   },
   salesReport: async (req, res, next) => {
-
-    console.log('report');
+    console.log("report");
     try {
-      console.log(req.body)
+      console.log(req.body);
       let admin = req.session.admin;
       let salesData = await Order.aggregate([
         {
@@ -581,13 +618,18 @@ module.exports = {
         },
         { $sort: { order_date: -1 } },
       ]);
-      let salesDatas = salesData
+      let salesDatas = salesData;
       console.log(salesDatas, "innnn");
-      res.render('admin/salesReport', { admin, title: 'Sales Report', page: 'Sales Report', salesData ,adminz:true})
+      res.render("admin/salesReport", {
+        admin,
+        title: "Sales Report",
+        page: "Sales Report",
+        salesData,
+        adminz: true,
+      });
     } catch (error) {
       console.log(error);
       next(createError(404));
     }
-
-  }
+  },
 };
